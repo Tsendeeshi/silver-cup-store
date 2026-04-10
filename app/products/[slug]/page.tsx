@@ -126,44 +126,45 @@ export default function ProductDetail() {
   }
 
   return (
-    <div className="mx-auto max-w-6xl px-4 py-8">
+    <div className="mx-auto max-w-6xl px-6 py-10">
       <Link
         href="/"
-        className="mb-6 inline-block text-sm text-zinc-500 hover:text-zinc-900"
+        className="mb-8 inline-block text-xs tracking-wider text-white/30 hover:text-gold transition-colors font-light uppercase"
       >
         ← Бүх бүтээгдэхүүн
       </Link>
 
-      <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
+      <div className="grid grid-cols-1 gap-10 md:grid-cols-2">
         {/* Image section */}
-        <div className="aspect-[5/4] rounded-lg bg-[#1a1a1a] flex items-center justify-center">
+        <div className="aspect-[5/4] rounded-sm bg-dark border border-white/5 flex items-center justify-center overflow-hidden">
           {displayImages.length > 0 ? (
             <img
               src={getImageUrl(displayImages[0].image_url.replace("thumbnail/", "full/"))}
               alt={product.name}
-              className="h-full w-full rounded-lg object-contain"
+              className="h-full w-full object-contain"
             />
           ) : (
-            <span className="text-6xl text-zinc-300">🏆</span>
+            <span className="text-6xl text-white/10">🏆</span>
           )}
         </div>
 
         {/* Info section */}
         <div>
-          <h1 className="mb-2 text-2xl font-bold text-zinc-900">
+          <div className="divider-gold mb-6" style={{ width: 32 }} />
+          <h1 className="font-display mb-3 text-3xl font-light tracking-wide text-white/90">
             {product.name}
           </h1>
 
           {product.material && (
-            <p className="mb-4 text-sm text-zinc-500">{product.material}</p>
+            <p className="mb-4 text-[11px] text-gold/60 tracking-wider uppercase font-light">{product.material}</p>
           )}
 
           {product.description && (
-            <p className="mb-6 text-zinc-700">{product.description}</p>
+            <p className="mb-8 text-sm text-white/35 leading-[1.9] font-light">{product.description}</p>
           )}
 
           {/* Price */}
-          <p className="mb-6 text-2xl font-bold text-zinc-900">
+          <p className="mb-8 text-2xl font-display font-semibold text-gold tracking-wide">
             {selectedVariant
               ? formatPrice(selectedVariant.price)
               : formatPrice(product.base_price)}
@@ -172,7 +173,7 @@ export default function ProductDetail() {
           {/* Color selection */}
           {colors.length > 0 && (
             <div className="mb-6">
-              <label className="mb-2 block text-sm font-medium text-zinc-700">
+              <label className="mb-2.5 block text-[10px] font-medium text-white/40 tracking-[0.2em] uppercase">
                 Өнгө
               </label>
               <div className="flex flex-wrap gap-2">
@@ -180,10 +181,10 @@ export default function ProductDetail() {
                   <button
                     key={color}
                     onClick={() => setSelectedColor(color)}
-                    className={`rounded-full border px-4 py-2 text-sm transition-colors ${
+                    className={`border px-4 py-2 text-xs tracking-wider transition-all duration-300 ${
                       selectedColor === color
-                        ? "border-zinc-900 bg-zinc-900 text-white"
-                        : "border-zinc-300 bg-white text-zinc-700 hover:border-zinc-500"
+                        ? "border-gold bg-gold/10 text-gold"
+                        : "border-white/10 text-white/40 hover:border-white/25"
                     }`}
                   >
                     {color}
@@ -196,7 +197,7 @@ export default function ProductDetail() {
           {/* Size selection */}
           {sizes.length > 0 && (
             <div className="mb-6">
-              <label className="mb-2 block text-sm font-medium text-zinc-700">
+              <label className="mb-2.5 block text-[10px] font-medium text-white/40 tracking-[0.2em] uppercase">
                 Хэмжээ
               </label>
               <div className="flex flex-wrap gap-2">
@@ -207,12 +208,12 @@ export default function ProductDetail() {
                       key={size}
                       onClick={() => isAvailable && setSelectedSize(size)}
                       disabled={!isAvailable}
-                      className={`rounded-md border px-4 py-2 text-sm transition-colors ${
+                      className={`border px-4 py-2 text-xs tracking-wider transition-all duration-300 ${
                         selectedSize === size
-                          ? "border-zinc-900 bg-zinc-900 text-white"
+                          ? "border-gold bg-gold/10 text-gold"
                           : isAvailable
-                            ? "border-zinc-300 bg-white text-zinc-700 hover:border-zinc-500"
-                            : "cursor-not-allowed border-zinc-100 bg-zinc-50 text-zinc-300"
+                            ? "border-white/10 text-white/40 hover:border-white/25"
+                            : "cursor-not-allowed border-white/5 text-white/15"
                       }`}
                     >
                       {size}
@@ -225,7 +226,7 @@ export default function ProductDetail() {
 
           {/* Stock info */}
           {selectedVariant && (
-            <p className="mb-6 text-sm text-zinc-500">
+            <p className="mb-6 text-[11px] text-white/25 font-light tracking-wider">
               Нөөц: {selectedVariant.stock_qty} ширхэг
             </p>
           )}
@@ -249,12 +250,12 @@ export default function ProductDetail() {
               setAdded(true);
               setTimeout(() => setAdded(false), 2000);
             }}
-            className={`w-full rounded-lg px-6 py-3 text-base font-medium transition-colors ${
+            className={`w-full px-6 py-3.5 text-[11px] font-medium tracking-[0.2em] uppercase transition-all duration-300 ${
               added
-                ? "bg-green-600 text-white"
+                ? "bg-green-800 text-green-100 border border-green-700"
                 : selectedVariant && selectedVariant.stock_qty > 0
-                  ? "bg-zinc-900 text-white hover:bg-zinc-800"
-                  : "cursor-not-allowed bg-zinc-200 text-zinc-400"
+                  ? "bg-gold text-dark hover:bg-gold-light hover:shadow-[0_8px_32px_rgba(184,150,78,0.25)]"
+                  : "cursor-not-allowed bg-white/5 text-white/20 border border-white/5"
             }`}
           >
             {added

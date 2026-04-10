@@ -1,17 +1,20 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Cormorant_Garamond, Libre_Franklin } from "next/font/google";
 import Link from "next/link";
 import CartBadge from "./components/CartBadge";
 import "./globals.css";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
+const displayFont = Cormorant_Garamond({
+  variable: "--font-display",
+  subsets: ["latin", "cyrillic"],
+  weight: ["300", "400", "500", "600", "700"],
+  style: ["normal", "italic"],
 });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
+const bodyFont = Libre_Franklin({
+  variable: "--font-body",
+  subsets: ["latin", "cyrillic"],
+  weight: ["300", "400", "500", "600"],
 });
 
 const SITE_URL = process.env.NEXT_PUBLIC_BASE_URL ?? "https://duurengoyl.mn";
@@ -65,7 +68,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="mn">
+    <html lang="mn" className="dark">
       <head>
         <script
           type="application/ld+json"
@@ -78,7 +81,7 @@ export default function RootLayout({
                 "Монгол уламжлалт гар урлалын мөнгөн аяга, таваг, халбага, бэлэг дурсгал",
               url: SITE_URL,
               logo: OG_IMAGE,
-              priceRange: "₮35,000 - ₮350,000",
+              priceRange: "35,000₮ - 350,000₮",
               address: {
                 "@type": "PostalAddress",
                 addressCountry: "MN",
@@ -88,33 +91,33 @@ export default function RootLayout({
         />
       </head>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${displayFont.variable} ${bodyFont.variable} antialiased`}
       >
         {/* Top bar */}
-        <div className="bg-dark text-center text-xs tracking-widest text-white/70 py-2">
-          МОНГОЛ ГАР УРЛАЛЫН МӨНГӨН ЭДЛЭЛ
+        <div className="border-b border-gold/10 bg-dark text-center text-[10px] font-light tracking-[0.4em] text-gold/50 py-2.5 uppercase">
+          Монгол гар урлалын мөнгөн эдлэл
         </div>
 
-        <header className="sticky top-0 z-50 border-b border-zinc-200/60 bg-cream/95 backdrop-blur-md">
+        <header className="sticky top-0 z-50 border-b border-white/5 bg-dark/95 backdrop-blur-xl">
           <nav className="mx-auto flex max-w-6xl items-center justify-between px-6 py-5">
-            <Link href="/" className="group">
-              <span className="text-2xl font-light tracking-[0.15em] text-dark uppercase">
+            <Link href="/" className="group flex items-baseline gap-1.5">
+              <span className="font-display text-2xl font-light tracking-[0.15em] text-white/90 uppercase">
                 Дүүрэн
               </span>
-              <span className="text-2xl font-semibold tracking-[0.15em] text-gold ml-1 uppercase">
+              <span className="font-display text-2xl font-semibold tracking-[0.15em] text-gold uppercase">
                 Гоёл
               </span>
             </Link>
             <div className="flex items-center gap-8">
               <Link
                 href="/"
-                className="text-xs tracking-widest text-zinc-600 uppercase hover:text-gold transition-colors"
+                className="text-[10px] font-medium tracking-[0.2em] text-white/40 uppercase hover:text-gold transition-colors duration-300"
               >
                 Бүтээгдэхүүн
               </Link>
               <Link
                 href="/orders"
-                className="text-xs tracking-widest text-zinc-600 uppercase hover:text-gold transition-colors"
+                className="text-[10px] font-medium tracking-[0.2em] text-white/40 uppercase hover:text-gold transition-colors duration-300"
               >
                 Захиалга
               </Link>
@@ -126,42 +129,42 @@ export default function RootLayout({
         <main className="min-h-screen">{children}</main>
 
         {/* Footer */}
-        <footer className="bg-dark text-white/60">
-          <div className="mx-auto max-w-6xl px-6 py-12">
-            <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
+        <footer className="border-t border-white/5 bg-dark">
+          <div className="mx-auto max-w-6xl px-6 py-16">
+            <div className="grid grid-cols-1 gap-10 md:grid-cols-3">
               <div>
-                <h3 className="mb-4 text-sm font-semibold tracking-widest text-white uppercase">
+                <h3 className="font-display mb-4 text-lg font-light tracking-widest text-white/80 uppercase">
                   Дүүрэн Гоёл
                 </h3>
-                <p className="text-sm leading-relaxed">
+                <p className="text-xs leading-[1.9] text-white/30 font-light">
                   Монгол уламжлалт гар урлалын мөнгөн эдлэлийн дэлгүүр.
                   Бидний бүтээгдэхүүн бүр урлагийн бүтээл.
                 </p>
               </div>
               <div>
-                <h3 className="mb-4 text-sm font-semibold tracking-widest text-white uppercase">
+                <h3 className="font-display mb-4 text-lg font-light tracking-widest text-white/80 uppercase">
                   Холбоос
                 </h3>
-                <div className="flex flex-col gap-2 text-sm">
-                  <Link href="/" className="hover:text-gold transition-colors">
+                <div className="flex flex-col gap-2.5 text-xs font-light">
+                  <Link href="/" className="text-white/30 hover:text-gold transition-colors">
                     Бүтээгдэхүүн
                   </Link>
-                  <Link href="/orders" className="hover:text-gold transition-colors">
+                  <Link href="/orders" className="text-white/30 hover:text-gold transition-colors">
                     Захиалга шалгах
                   </Link>
                 </div>
               </div>
               <div>
-                <h3 className="mb-4 text-sm font-semibold tracking-widest text-white uppercase">
+                <h3 className="font-display mb-4 text-lg font-light tracking-widest text-white/80 uppercase">
                   Холбоо барих
                 </h3>
-                <div className="flex flex-col gap-2 text-sm">
+                <div className="flex flex-col gap-2.5 text-xs text-white/30 font-light">
                   <p>Утас: +976 0000-0000</p>
                   <p>И-мэйл: info@duurengoyl.mn</p>
                 </div>
               </div>
             </div>
-            <div className="mt-10 border-t border-white/10 pt-6 text-center text-xs text-white/40">
+            <div className="mt-12 border-t border-white/5 pt-6 text-center text-[10px] text-white/20 tracking-wider">
               &copy; 2026 Дүүрэн Гоёл. Бүх эрх хуулиар хамгаалагдсан.
             </div>
           </div>
