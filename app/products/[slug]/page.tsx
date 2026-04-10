@@ -7,8 +7,16 @@ import { supabase } from "@/lib/supabase";
 import { useCartStore } from "@/lib/cart-store";
 import type { Product, ProductVariant, ProductImage } from "@/lib/types";
 
+const STORAGE_URL =
+  "https://vdoieqzhmvilwmnkzzvh.supabase.co/storage/v1/object/public/product-images";
+
 function formatPrice(price: number): string {
   return price.toLocaleString("mn-MN") + "₮";
+}
+
+function getImageUrl(imageUrl: string): string {
+  if (imageUrl.startsWith("http")) return imageUrl;
+  return `${STORAGE_URL}/${imageUrl.replace(/^\//, "")}`;
 }
 
 export default function ProductDetail() {
@@ -128,12 +136,12 @@ export default function ProductDetail() {
 
       <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
         {/* Image section */}
-        <div className="aspect-square rounded-lg bg-zinc-100 flex items-center justify-center">
+        <div className="aspect-[5/4] rounded-lg bg-[#1a1a1a] flex items-center justify-center">
           {displayImages.length > 0 ? (
             <img
-              src={displayImages[0].image_url}
+              src={getImageUrl(displayImages[0].image_url.replace("thumbnail/", "full/"))}
               alt={product.name}
-              className="h-full w-full rounded-lg object-cover"
+              className="h-full w-full rounded-lg object-contain"
             />
           ) : (
             <span className="text-6xl text-zinc-300">🏆</span>
@@ -236,7 +244,7 @@ export default function ProductDetail() {
                 color: selectedVariant.color,
                 size: selectedVariant.size,
                 price: selectedVariant.price,
-                image_url: image?.image_url ?? null,
+                image_url: image ? getImageUrl(image.image_url) : null,
               });
               setAdded(true);
               setTimeout(() => setAdded(false), 2000);

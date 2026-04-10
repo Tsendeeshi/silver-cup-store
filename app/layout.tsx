@@ -14,10 +14,49 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
+const SITE_URL = process.env.NEXT_PUBLIC_BASE_URL ?? "https://duurengoyl.mn";
+const OG_IMAGE = "https://vdoieqzhmvilwmnkzzvh.supabase.co/storage/v1/object/public/product-images/full/65.jpg";
+
 export const metadata: Metadata = {
-  title: "Дүүрэн Гоёл | Монгол гар урлалын мөнгөн эдлэл",
+  metadataBase: new URL(SITE_URL),
+  title: {
+    default: "Дүүрэн Гоёл | Монгол гар урлалын мөнгөн эдлэл",
+    template: "%s | Дүүрэн Гоёл",
+  },
   description:
-    "Монгол уламжлалт гар урлалын мөнгөн аяга, таваг, эдлэл. Бэлэг дурсгал.",
+    "Монгол уламжлалт гар урлалын мөнгөн аяга, таваг, халбага, данх, бэлэг дурсгал. Дархан урчуудын гар ажиллагаатай 925 мөнгөн эдлэл.",
+  keywords: [
+    "мөнгөн аяга",
+    "зэс аяга",
+    "монгол гар урлал",
+    "бэлэг дурсгал",
+    "мөнгөн эдлэл",
+    "дүүрэн гоёл",
+    "зэс таваг",
+    "халбага",
+    "монгол уламжлал",
+  ],
+  authors: [{ name: "Дүүрэн Гоёл" }],
+  openGraph: {
+    type: "website",
+    locale: "mn_MN",
+    siteName: "Дүүрэн Гоёл",
+    title: "Дүүрэн Гоёл | Монгол гар урлалын мөнгөн эдлэл",
+    description:
+      "Монгол уламжлалт гар урлалын мөнгөн аяга, таваг, халбага, данх, бэлэг дурсгал. Дархан урчуудын гар ажиллагаа.",
+    images: [{ url: OG_IMAGE, width: 1200, height: 960, alt: "Дүүрэн Гоёл мөнгөн эдлэл" }],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Дүүрэн Гоёл | Монгол гар урлалын мөнгөн эдлэл",
+    description:
+      "Монгол уламжлалт гар урлалын мөнгөн аяга, таваг, бэлэг дурсгал.",
+    images: [OG_IMAGE],
+  },
+  robots: {
+    index: true,
+    follow: true,
+  },
 };
 
 export default function RootLayout({
@@ -27,6 +66,27 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="mn">
+      <head>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "Store",
+              name: "Дүүрэн Гоёл",
+              description:
+                "Монгол уламжлалт гар урлалын мөнгөн аяга, таваг, халбага, бэлэг дурсгал",
+              url: SITE_URL,
+              logo: OG_IMAGE,
+              priceRange: "₮35,000 - ₮350,000",
+              address: {
+                "@type": "PostalAddress",
+                addressCountry: "MN",
+              },
+            }),
+          }}
+        />
+      </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
