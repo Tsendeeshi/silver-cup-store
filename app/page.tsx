@@ -105,10 +105,12 @@ export default async function Home({
     products = products.filter((p) => p.category === selectedCategory);
   }
 
+  const showHero = selectedCategory === "all";
+
   return (
     <div>
       {/* ===== FULL-SCREEN HERO ===== */}
-      <section
+      {showHero && <section
         className="hero-cover noise"
         style={{ backgroundImage: `url(${COVER_HERO})` }}
       >
@@ -156,7 +158,7 @@ export default async function Home({
           </span>
           <div className="h-8 w-px bg-gradient-to-b from-gold/50 to-transparent" />
         </div>
-      </section>
+      </section>}
 
       {/* ===== CATEGORY NAV ===== */}
       {(categories ?? []).length > 0 && (
@@ -259,7 +261,7 @@ export default async function Home({
       </section>
 
       {/* ===== PARALLAX COVER — CRAFTSMANSHIP ===== */}
-      <section
+      {showHero && <section
         className="section-cover noise"
         style={{ backgroundImage: `url(${COVER_CRAFT})` }}
       >
@@ -279,10 +281,10 @@ export default async function Home({
             өнөөгийн загварын хослол.
           </p>
         </div>
-      </section>
+      </section>}
 
       {/* ===== THREE PILLARS ===== */}
-      <section className="bg-dark-soft">
+      {showHero && <section className="bg-dark-soft">
         <div className="mx-auto max-w-5xl px-6 py-20">
           <div className="grid grid-cols-1 gap-px md:grid-cols-3">
             {[
@@ -319,10 +321,10 @@ export default async function Home({
             ))}
           </div>
         </div>
-      </section>
+      </section>}
 
       {/* ===== BOTTOM CTA ===== */}
-      <section className="bg-cream mongol-pattern">
+      {showHero && <section className="bg-cream mongol-pattern">
         <div className="mx-auto max-w-3xl px-6 py-24 text-center">
           <div className="divider-gold mx-auto mb-6" />
           <h2 className="mb-5 text-2xl font-extralight tracking-wide text-dark md:text-3xl">
@@ -336,7 +338,7 @@ export default async function Home({
             Бүтээгдэхүүн сонгох
           </Link>
         </div>
-      </section>
+      </section>}
     </div>
   );
 }
