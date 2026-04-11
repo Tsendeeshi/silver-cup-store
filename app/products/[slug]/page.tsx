@@ -31,6 +31,7 @@ export default function ProductDetail() {
 
   const [selectedColor, setSelectedColor] = useState<string | null>(null);
   const [selectedSize, setSelectedSize] = useState<string | null>(null);
+  const [selectedImageIndex, setSelectedImageIndex] = useState(0);
   const [added, setAdded] = useState(false);
   const addItem = useCartStore((s) => s.addItem);
 
@@ -106,6 +107,11 @@ export default function ProductDetail() {
     ? images.filter((img) => img.color === selectedColor || !img.color)
     : images;
 
+  // Reset image index when color changes or when index is out of bounds
+  useEffect(() => {
+    setSelectedImageIndex(0);
+  }, [selectedColor]);
+
   if (loading) {
     return (
       <div className="mx-auto max-w-6xl px-4 py-16 text-center text-zinc-500">
@@ -136,15 +142,44 @@ export default function ProductDetail() {
 
       <div className="grid grid-cols-1 gap-10 md:grid-cols-2">
         {/* Image section */}
-        <div className="aspect-[5/4] rounded-sm bg-dark border border-white/5 flex items-center justify-center overflow-hidden">
-          {displayImages.length > 0 ? (
-            <img
-              src={getImageUrl(displayImages[0].image_url.replace("thumbnail/", "full/"))}
-              alt={product.name}
-              className="h-full w-full object-contain"
-            />
-          ) : (
-            <span className="text-6xl text-white/10">🏆</span>
+        <div>
+          {/* Main image */}
+          <div className="aspect-[5/4] rounded-sm bg-dark border border-white/5 flex items-center justify-center overflow-hidden mb-3">
+            {displayImages.length > 0 ? (
+              <img
+                src={getImageUrl(
+                  displayImages[selectedImageIndex]?.image_url.replace("thumbnail/", "full/") ??
+                  displayImages[0].image_url.replace("thumbnail/", "full/")
+                )}
+                alt={product.name}
+                className="h-full w-full object-contain transition-opacity duration-300"
+              />
+            ) : (
+              <span className="text-6xl text-white/10">🏆</span>
+            )}
+          </div>
+
+          {/* Thumbnail strip */}
+          {displayImages.length > 1 && (
+            <div className="flex gap-2 overflow-x-auto scrollbar-none pb-1">
+              {displayImages.map((img, i) => (
+                <button
+                  key={img.id}
+                  onClick={() => setSelectedImageIndex(i)}
+                  className={`shrink-0 w-16 h-16 rounded-sm overflow-hidden border transition-all duration-300 ${
+                    i === selectedImageIndex
+                      ? "border-gold ring-1 ring-gold/30"
+                      : "border-white/5 opacity-50 hover:opacity-80"
+                  }`}
+                >
+                  <img
+                    src={getImageUrl(img.image_url)}
+                    alt=""
+                    className="h-full w-full object-cover"
+                  />
+                </button>
+              ))}
+            </div>
           )}
         </div>
 
