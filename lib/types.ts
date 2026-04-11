@@ -19,6 +19,7 @@ export type Product = {
   material: string | null;
   base_price: number;
   is_active: boolean;
+  design_group: string | null;
   created_at: string;
   updated_at: string;
 };

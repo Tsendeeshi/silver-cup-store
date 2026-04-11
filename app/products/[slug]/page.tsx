@@ -23,9 +23,19 @@ export default function ProductDetail() {
   const params = useParams();
   const slug = params.slug as string;
 
+  type SiblingProduct = {
+    id: string;
+    name: string;
+    slug: string;
+    material: string | null;
+    base_price: number;
+    image_url: string | null;
+  };
+
   const [product, setProduct] = useState<Product | null>(null);
   const [variants, setVariants] = useState<ProductVariant[]>([]);
   const [images, setImages] = useState<ProductImage[]>([]);
+  const [siblings, setSiblings] = useState<SiblingProduct[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -68,6 +78,39 @@ export default function ProductDetail() {
 
       setVariants(variantsRes.data ?? []);
       setImages(imagesRes.data ?? []);
+
+      // Ижил загвартай бүтээгдэхүүнүүдийг олох
+      if (productData.design_group) {
+        const { data: siblingProducts } = await supabase
+          .from("products")
+          .select("id, name, slug, material, base_price")
+          .eq("design_group", productData.design_group)
+          .eq("is_active", true)
+          .order("base_price");
+
+        if (siblingProducts && siblingProducts.length > 1) {
+          // Sibling бүрийн primary зургийг авах
+          const siblingIds = siblingProducts.map((s) => s.id);
+          const { data: siblingImages } = await supabase
+            .from("product_images")
+            .select("product_id, image_url")
+            .in("product_id", siblingIds)
+            .eq("is_primary", true);
+
+          const imageMap = new Map<string, string>();
+          for (const img of siblingImages ?? []) {
+            imageMap.set(img.product_id, getImageUrl(img.image_url));
+          }
+
+          setSiblings(
+            siblingProducts.map((s) => ({
+              ...s,
+              image_url: imageMap.get(s.id) ?? null,
+            }))
+          );
+        }
+      }
+
       setLoading(false);
     }
 
@@ -204,6 +247,44 @@ export default function ProductDetail() {
               ? formatPrice(selectedVariant.price)
               : formatPrice(product.base_price)}
           </p>
+
+          {/* Material siblings */}
+          {siblings.length > 1 && (
+            <div className="mb-6">
+              <label className="mb-2.5 block text-[10px] font-medium text-white/40 tracking-[0.2em] uppercase">
+                Материал
+              </label>
+              <div className="flex flex-wrap gap-2">
+                {siblings.map((sib) => {
+                  const isCurrent = sib.id === product.id;
+                  const materialLabel = sib.material?.split(",")[0]?.trim() ?? sib.name;
+                  return (
+                    <Link
+                      key={sib.id}
+                      href={`/products/${sib.slug}`}
+                      className={`flex items-center gap-2 border px-3 py-2 text-xs tracking-wider transition-all duration-300 ${
+                        isCurrent
+                          ? "border-gold bg-gold/10 text-gold"
+                          : "border-white/10 text-white/40 hover:border-white/25"
+                      }`}
+                    >
+                      {sib.image_url && (
+                        <img
+                          src={sib.image_url}
+                          alt=""
+                          className="w-8 h-8 rounded-sm object-cover"
+                        />
+                      )}
+                      <div>
+                        <span className="block">{materialLabel}</span>
+                        <span className="block text-[9px] text-white/25">{formatPrice(sib.base_price)}</span>
+                      </div>
+                    </Link>
+                  );
+                })}
+              </div>
+            </div>
+          )}
 
           {/* Color selection */}
           {colors.length > 0 && (
