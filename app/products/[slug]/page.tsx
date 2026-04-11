@@ -230,10 +230,13 @@ export default function ProductDetail() {
           )}
 
           {/* Size selection */}
-          {sizes.length > 0 && (
+          {sizes.length > 0 && (() => {
+            const zodiacNames = ["Хулгана","Үхэр","Бар","Туулай","Луу","Могой","Морь","Хонь","Бич","Тахиа","Нохой","Гахай"];
+            const isZodiac = sizes.some((s) => zodiacNames.includes(s));
+            return (
             <div className="mb-6">
               <label className="mb-2.5 block text-[10px] font-medium text-white/40 tracking-[0.2em] uppercase">
-                Хэмжээ
+                {isZodiac ? "Жил сонгох" : "Хэмжээ"}
               </label>
               <div className="flex flex-wrap gap-2">
                 {sizes.map((size) => {
@@ -257,7 +260,8 @@ export default function ProductDetail() {
                 })}
               </div>
             </div>
-          )}
+            );
+          })()}
 
           {/* Stock info */}
           {selectedVariant && (
